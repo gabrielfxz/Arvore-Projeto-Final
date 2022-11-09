@@ -1,44 +1,24 @@
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        FileInputStream arquivo = new FileInputStream("C:\\Users\\gabri\\Desktop\\teste.txt");
-        BufferedInputStream reader = new BufferedInputStream(arquivo);
-        DataInputStream data = new DataInputStream(reader);
+    public static void main(String[] args) throws Exception {
 
-        byte vetByte[];
+        String arquivo = "C:\\Users\\gabri\\Desktop\\teste.txt";
+        Arquivo arq = new Arquivo(arquivo);
+        String str = arq.getUmaString();
 
-        vetByte = new byte[arquivo.available()];
+        System.out.println(str);
 
-        data.read(vetByte);
+        //Huffman huffman = new Huffman("o rato roueu a roupa do rei de roma !! awdiaofboauwfv .,.");
+        Huffman huffman = new Huffman(str);
+        String encodedtext = huffman.encode();
+        System.out.println(encodedtext);
 
-        int[] quantidades = new int[26];
-        List<Caractere> caracteres = new ArrayList<Caractere>();
+        huffman.printCodes();
 
-        for (char c : new String(vetByte).toUpperCase().toCharArray()) {
-            int indice = c - 65;
-            if (indice >= 0 && indice < 26) {
-                quantidades[indice] += 1;
-            }
-        }
-
-        for (int i = 0; i < quantidades.length; i++) {
-            char letra = (char) (i + 65);
-            caracteres.add(new Caractere(letra, quantidades[i]));
-        }
-
-        for(Caractere c : caracteres){
-            System.out.println(c.getC()+" , "+c.getQtd());
-        }
-
-        Collections.sort(caracteres);
-        System.out.println("Ordenando a lista:");
-
-        for(Caractere c : caracteres){
-            System.out.println(c.getC()+" , "+c.getQtd());
-        }
+        String originalText = huffman.decode(encodedtext);
+        System.out.println(originalText);
     }
 }
